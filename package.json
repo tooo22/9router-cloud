@@ -1,0 +1,15 @@
+{
+  "name": "9router-cloud",
+  "version": "1.0.0",
+  "description": "9Router AI Gateway deployed on Render Cloud with Mobile UI",
+  "main": "start.js",
+  "scripts": {
+    "start": "node start.js"
+  },
+  "dependencies": {
+    "9router": "latest"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

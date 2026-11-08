@@ -1,0 +1,1386 @@
+<!doctype html>
+<html lang="id"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4f4f6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>9Router Mobile</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[data-theme="dark"]{--bg:#0e0e12;--card:#17171d;--tx:#f2f2f5;--mu:#9a9aa6;--bd:#26262e}
+:root{--bg:#f2f2f5;--card:#fff;--tx:#141417;--mu:#8a8a94;--bd:#ececf0;
+--vio:#7c6cf0;--vio-t:#ece9fd;--mint:#d9f4e3;--mint-t:#0f7a45;--butter:#fdf0c4;--butter-t:#7a5d00;
+--ink:#141417;--ok:#12a150;--err:#e5484d;--r:22px;--pad:18px}
+html,body{margin:0;background:var(--bg);color:var(--tx);max-width:100vw;overflow-x:hidden;
+transition:background-color .35s ease,color .35s ease;
+font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+body{padding-bottom:calc(104px + env(safe-area-inset-bottom))}
+.top{display:flex;align-items:center;justify-content:space-between;
+padding:calc(env(safe-area-inset-top) + 18px) var(--pad) 12px}
+.top h1{margin:0;font-size:31px;font-weight:800;letter-spacing:-1px}
+.gear{width:38px;height:38px;border-radius:50%;background:var(--card);border:0;
+display:grid;place-items:center;font-size:17px;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+.wrap{padding:0 var(--pad);max-width:100%}
+.seg{display:flex;background:var(--card);border-radius:99px;padding:4px;gap:2px;margin-bottom:16px}
+.seg button{flex:1;border:0;background:none;font:inherit;font-size:14.5px;font-weight:600;color:var(--mu);
+padding:10px 0;border-radius:99px;transition:.15s}
+.seg button.on{background:var(--ink);color:#fff}
+.card{background:var(--card);border-radius:var(--r);padding:18px;margin-bottom:14px;
+box-shadow:0 1px 2px rgba(16,16,30,.04)}
+.hero{background:linear-gradient(160deg,#ddd6fb,#e8e2fd 55%,#eae5fe);display:flex;gap:12px;
+justify-content:space-between;align-items:flex-start}
+.hero .lbl{font-size:14.5px;font-weight:650;color:#4a4363;display:flex;align-items:center;gap:7px}
+.hero .lbllogosvg{flex:0 0 auto;color:#6b5ae0}
+.hero .sub{font-size:12.5px;color:#6f6790;margin-top:1px}
+.hero .big{font-size:39px;font-weight:800;letter-spacing:-1.6px;margin:8px 0 2px;line-height:1}
+.hero .cost24{font-size:15px;color:#5b5478;margin-bottom:12px}
+.pill{display:inline-block;background:rgba(255,255,255,.72);border-radius:99px;
+padding:5px 12px;font-size:12.5px;font-weight:600;color:#4a4363}
+.ring{width:92px;height:92px;flex:0 0 auto;position:relative;display:grid;place-items:center}
+.ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ring b{font-size:19px;font-weight:800;letter-spacing:-.5px;z-index:1}
+.ring span{font-size:10.5px;color:#6f6790;z-index:1;margin-top:-26px}
+.tokhead{display:flex;align-items:center;gap:11px;margin-bottom:16px}
+.ico{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:17px;flex:0 0 auto}
+.tokhead .tt{font-size:17px;font-weight:700;letter-spacing:-.3px}
+.tokhead .ts{font-size:13px;color:var(--mu)}
+.cols3{display:flex;text-align:center}
+.cols3>div{flex:1;position:relative}
+.cols3>div+div:before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:1px;background:var(--bd)}
+.cols3 .k{font-size:13px;color:var(--mu)}
+.cols3 .v{font-size:19px;font-weight:750;letter-spacing:-.5px;margin-top:2px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.tile{border-radius:var(--r);padding:16px}
+.tile .k{font-size:12.5px;font-weight:600;opacity:.75;display:flex;gap:5px;align-items:center}
+.tile .v{font-size:26px;font-weight:800;letter-spacing:-1px;margin-top:8px}
+.tile.mint{background:var(--mint);color:var(--mint-t)}
+.tile.butter{background:var(--butter);color:var(--butter-t)}
+.sec{display:flex;align-items:center;justify-content:space-between;margin:22px 0 12px}
+.sec h2{margin:0;font-size:20px;font-weight:800;letter-spacing:-.5px}
+.sec h2 small{font-size:13px;font-weight:500;color:var(--mu);margin-left:6px}
+.toggle{display:flex;background:var(--card);border-radius:99px;padding:3px}
+.toggle button{border:0;background:none;font:inherit;font-size:13px;font-weight:600;color:var(--mu);padding:7px 16px;border-radius:99px}
+.toggle button.on{background:var(--ink);color:#fff}
+.chart-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px}
+.chart-info{flex:1;min-width:0}
+.bigcost{font-size:32px;font-weight:850;letter-spacing:-1.2px;line-height:1.1;transition:color .18s ease}
+.bigcost-sub{font-size:13px;color:var(--mu);margin-top:4px;min-height:20px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.chart-reset-btn{border:0;background:var(--vio-t);color:var(--vio);font:700 11.5px/1 ui-rounded,-apple-system,sans-serif;padding:5px 11px;border-radius:99px;cursor:pointer;flex:0 0 auto;display:inline-flex;align-items:center;gap:3px;box-shadow:0 1px 4px rgba(124,108,240,.15);transition:transform .12s}
+.chart-reset-btn:active{transform:scale(.92)}
+[data-theme="dark"] .chart-reset-btn{background:rgba(139,124,245,.22);color:#cdc6f2;box-shadow:none}
+
+.bars{display:flex;align-items:flex-end;gap:3.5px;height:102px;margin-top:14px;min-width:0;position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:pan-y;padding:6px 0 2px}
+.bars i{flex:1;background:var(--vio-t);border-radius:6px 6px 2px 2px;position:relative;transition:background .15s ease,transform .15s ease,opacity .15s ease;min-height:4px}
+.bars i.now{background:var(--vio)}
+.bars.has-active i{opacity:.3}
+.bars i.active{opacity:1 !important;background:var(--vio) !important;transform:scaleY(1.08) scaleX(1.18);box-shadow:0 0 14px rgba(124,108,240,.75);z-index:2}
+[data-theme="dark"] .bars i{background:#262142}
+[data-theme="dark"] .bars i.now{background:#7c6cf0}
+[data-theme="dark"] .bars i.active{background:#9d91f8 !important;box-shadow:0 0 16px rgba(139,124,245,.9) !important}
+
+.baraxis{display:flex;justify-content:space-between;margin-top:9px;font-size:11.5px;font-weight:700;color:var(--mu);font-variant-numeric:tabular-nums;padding:0 3px}
+/* usage feed */
+.chip{background:var(--card);border-radius:99px;padding:9px 18px;font-size:14.5px;font-weight:600;
+color:var(--mu);border:0;font-family:inherit}
+.chip.on{background:var(--ink);color:#fff}
+.chiprow{display:flex;gap:8px;align-items:center;margin-bottom:16px}
+.chiprow .sp{margin-left:auto;font-size:14px;color:var(--mu);font-weight:600}
+.req{background:var(--card);border-radius:var(--r);padding:16px;margin-bottom:12px;display:flex;gap:13px}
+.av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:17px;flex:0 0 auto}
+.req .mid{flex:1;min-width:0}
+.req .name{font-size:17px;font-weight:700;letter-spacing:-.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.req .meta{font-size:13px;color:var(--mu);margin:2px 0 11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.req .cost{font-size:16px;font-weight:700;letter-spacing:-.4px;white-space:nowrap}
+.tags{display:flex;gap:7px;flex-wrap:wrap}
+.tag{font-size:12.5px;font-weight:600;padding:5px 10px;border-radius:9px}
+.tag.in{background:#e9e6fb;color:#4b3fb0}
+.tag.out{background:#dcf5e6;color:#137a48}
+.tag.all{background:#fceec0;color:#7d6007}
+/* bottom nav */
+nav{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:99;
+background:#ffffff;border-radius:28px;
+display:flex;padding:8px 6px;box-shadow:0 6px 24px rgba(16,16,30,.14);
+transform:translateZ(0);-webkit-transform:translateZ(0)}
+nav button{flex:1;background:none;border:0;padding:6px 0;display:flex;justify-content:center}
+nav .pill2{width:52px;height:38px;border-radius:99px;display:grid;place-items:center;transition:.18s}
+nav button.on .pill2{background:var(--vio-t)}
+nav svg{width:21px;height:21px;stroke:var(--mu);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+nav button.on svg{stroke:var(--vio)}
+.view{display:none}.view.on{display:block}
+.row{display:flex;align-items:center;gap:11px;padding:13px 0;border-bottom:1px solid var(--bd)}
+.row:last-child{border-bottom:0}
+.row .g{flex:1;min-width:0}
+.row .t{font-size:15px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .s{font-size:12.5px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-size:11px;font-weight:600;padding:4px 9px;border-radius:99px;flex:0 0 auto}
+.badge.ok{background:var(--mint);color:var(--mint-t)}
+.badge.err{background:#fde2e2;color:#b42318}
+.badge.warn{background:var(--butter);color:var(--butter-t)}
+.badge.off{background:#ececf0;color:#6b6b76}
+input[type=search]{width:100%;background:var(--card);border:0;border-radius:16px;padding:14px 16px;
+font:inherit;font-size:15px;outline:none;margin-bottom:12px;box-shadow:0 1px 2px rgba(16,16,30,.04)}
+.chips{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none;padding:2px}
+.chips::-webkit-scrollbar{display:none}
+.chip2{flex:0 0 auto;background:var(--card);border:0;border-radius:99px;padding:8px 14px;
+font:inherit;font-size:13px;font-weight:600;color:var(--mu)}
+.chip2.on{background:var(--ink);color:#fff}
+.more{width:100%;margin-top:12px;padding:15px;background:var(--card);border:0;border-radius:16px;
+font:inherit;font-size:15px;font-weight:600;color:var(--tx);box-shadow:0 1px 2px rgba(16,16,30,.04)}
+.empty{color:var(--mu);font-size:14px;text-align:center;padding:26px 0}
+.skel{height:16px;border-radius:8px;background:linear-gradient(90deg,#eeeef2,#f7f7fa,#eeeef2);
+background-size:200% 100%;animation:sh 1.2s infinite;margin:8px 0}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+pre{background:#f7f7fa;border-radius:14px;padding:13px;overflow-x:auto;font-size:11.5px;margin:10px 0 0;color:#4a4a55}
+.copy{background:var(--vio-t);color:var(--vio);border:0;border-radius:11px;padding:9px 14px;
+font:inherit;font-size:13px;font-weight:650}
+.logs{font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:#3d3d47;word-break:break-all}
+.logs .l{padding:7px 0;border-bottom:1px solid var(--bd)}
+
+[data-theme="dark"] .gear{background:var(--card);color:var(--tx)}
+[data-theme="dark"] .seg,[data-theme="dark"] .toggle{background:var(--card)}
+[data-theme="dark"] .seg button.on,[data-theme="dark"] .toggle button.on,[data-theme="dark"] .chip.on{background:#f2f2f5;color:#141417}
+[data-theme="dark"] .chip,[data-theme="dark"] .chip2{background:var(--card);color:var(--mu)}
+[data-theme="dark"] .chip2.on{background:#f2f2f5;color:#141417}
+[data-theme="dark"] nav{background:#17171d}
+[data-theme="dark"] nav svg{stroke:#9a9aa6}
+[data-theme="dark"] nav button.on svg{stroke:#a99cf7}
+[data-theme="dark"] .card,[data-theme="dark"] input[type=search],[data-theme="dark"] .more{background:var(--card);color:var(--tx)}
+[data-theme="dark"] .skel{background:linear-gradient(90deg,#1f1f27,#2a2a34,#1f1f27);background-size:200% 100%}
+[data-theme="dark"] pre{background:#1f1f27;color:#c9c9d4}
+[data-theme="dark"] .hero{background:linear-gradient(160deg,#2a2547,#322b56 55%,#2e2750)}
+[data-theme="dark"] .hero .lbl{color:#cdc6f2}
+[data-theme="dark"] .hero .sub,[data-theme="dark"] .hero .cost24{color:#a49bd0}
+[data-theme="dark"] .hero .big{color:#f5f3ff}
+[data-theme="dark"] .pill{background:rgba(255,255,255,.10);color:#cdc6f2}
+[data-theme="dark"] .ring svg circle:first-child{stroke:rgba(255,255,255,.14)}
+[data-theme="dark"] .tag.in{background:#35306b;color:#c3b8ff}
+[data-theme="dark"] .tag.out{background:#1d3f2c;color:#8fe0b4}
+[data-theme="dark"] .tag.all{background:#4a3d14;color:#f0d98c}
+[data-theme="dark"] .tile.mint{background:#173427;color:#8fe0b4}
+[data-theme="dark"] .tile.butter{background:#3b3212;color:#f0d98c}
+[data-theme="dark"] .tokhead .ico{background:#3a2226;color:#e58a91}
+[data-theme="dark"] .logs{color:#c9c9d4}
+
+.card,.gear,nav,.seg,.toggle,.chip,.chip2,input[type=search],.more,.tile,.req,.hero,.pill,pre{transition:background-color .35s ease,color .35s ease,border-color .35s ease}
+.sheetbg{position:fixed;inset:0;background:rgba(10,10,15,.45);opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:198}
+.sheetbg.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:199;background:#fff;border-radius:26px 26px 0 0;
+transform:translateY(105%);transition:transform .32s cubic-bezier(.32,.72,.28,1);
+padding:8px 18px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -8px 40px rgba(16,16,30,.18)}
+.sheet.on{transform:translateY(0)}
+.grip{width:38px;height:4.5px;border-radius:99px;background:#dcdce4;margin:8px auto 14px}
+.sheet h2{margin:0 0 6px;font-size:20px;font-weight:800;letter-spacing:-.5px}
+.setrow{display:flex;align-items:center;gap:13px;padding:13px 2px;border-bottom:1px solid var(--bd)}
+.setrow:last-child{border-bottom:0}
+.setico{width:40px;height:40px;border-radius:50%;background:#ece9fd;display:grid;place-items:center;font-size:17px}
+.setmid{flex:1;min-width:0}
+.settitle{font-size:15.5px;font-weight:650}
+.setsub{font-size:12.5px;color:var(--mu)}
+.sw{width:48px;height:28px;border-radius:99px;background:#e3e3ea;position:relative;transition:background .3s ease;flex:0 0 auto}
+.sw .knob{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;
+box-shadow:0 1px 4px rgba(0,0,0,.22);transition:left .28s cubic-bezier(.32,.72,.28,1)}
+.sw.on{background:#7c6cf0}
+.sw.on .knob{left:23px}
+[data-theme="dark"] .sheet{background:#17171d}
+[data-theme="dark"] .grip{background:#33333d}
+[data-theme="dark"] .setico{background:#262233}
+[data-theme="dark"] .sw{background:#2c2c36}
+[data-theme="dark"] .sw.on{background:#7c6cf0}
+
+/* ---- dark mode refinement ---- */
+[data-theme="dark"]{--bg:#09090d;--card:#15151b;--tx:#eeeef2;--mu:#8f8fa0;--bd:#23232c;
+--vio-t:#2b2647;--mint:#15301f;--mint-t:#7ee0a8;--butter:#33290e;--butter-t:#f2d478}
+[data-theme="dark"] .card{box-shadow:0 1px 0 rgba(255,255,255,.03) inset,0 2px 10px rgba(0,0,0,.35)}
+[data-theme="dark"] .hero{background:linear-gradient(155deg,#241f3f 0%,#2c2650 50%,#262047 100%);
+box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 6px 24px rgba(20,15,50,.45)}
+[data-theme="dark"] .hero .big{color:#fff;text-shadow:0 2px 18px rgba(124,108,240,.45)}
+[data-theme="dark"] .pill{background:rgba(124,108,240,.22);color:#cfc7f7;border:1px solid rgba(124,108,240,.28)}
+[data-theme="dark"] .ring svg circle:first-child{stroke:rgba(255,255,255,.10)}
+[data-theme="dark"] .ring b{color:#fff}
+[data-theme="dark"] .bars i{background:#2b2647}
+[data-theme="dark"] .bars i.now{background:#8b7cf5;box-shadow:0 0 14px rgba(139,124,245,.35)}
+[data-theme="dark"] .req,.data-theme="dark" .req{background:var(--card)}
+[data-theme="dark"] .req{box-shadow:0 1px 6px rgba(0,0,0,.30)}
+[data-theme="dark"] .req .name{color:#f3f3f7}
+[data-theme="dark"] .tag.in{background:#2e2950;color:#c0b4ff}
+[data-theme="dark"] .tag.out{background:#173325;color:#8fe6b6}
+[data-theme="dark"] .tag.all{background:#3a2f10;color:#f0d98c}
+[data-theme="dark"] .badge.err{background:#3a1a1c;color:#ff8f8f}
+[data-theme="dark"] .badge.ok{background:var(--mint);color:var(--mint-t)}
+[data-theme="dark"] .badge.warn{background:var(--butter);color:var(--butter-t)}
+[data-theme="dark"] .badge.off{background:#23232c;color:#8f8fa0}
+[data-theme="dark"] .tile.mint{background:linear-gradient(150deg,#15301f,#122a1b)}
+[data-theme="dark"] .tile.butter{background:linear-gradient(150deg,#33290e,#2c230c)}
+[data-theme="dark"] .tile .v{color:#fff}
+[data-theme="dark"] .tokhead .ico{background:#3a2226;color:#f0909a}
+[data-theme="dark"] input[type=search]{background:var(--card);color:var(--tx);box-shadow:0 1px 0 rgba(255,255,255,.03) inset}
+[data-theme="dark"] input[type=search]::placeholder{color:#6b6b7c}
+[data-theme="dark"] .more{background:#1d1d25}
+[data-theme="dark"] .more:active{background:#26262f}
+[data-theme="dark"] pre{background:#101015;border:1px solid #23232c;color:#b8b8c8}
+[data-theme="dark"] .copy{background:#2b2647;color:#b4a8ff}
+[data-theme="dark"] .chip.on,[data-theme="dark"] .chip2.on{background:#eeeef2;color:#0c0c10}
+[data-theme="dark"] .logs{color:#b0b0c0}
+[data-theme="dark"] .logs .l{border-bottom-color:#1d1d25}
+[data-theme="dark"] .gear{background:var(--card);box-shadow:0 1px 0 rgba(255,255,255,.04) inset}
+[data-theme="dark"] .gear svg,[data-theme="dark"] .gear{color:#c9c9d8}
+[data-theme="dark"] .empty{color:#6b6b7c}
+[data-theme="dark"] .sheet{background:#15151b;box-shadow:0 -10px 50px rgba(0,0,0,.6)}
+[data-theme="dark"] .settitle{color:#eeeef2}
+[data-theme="dark"] .sheetbg{background:rgba(0,0,0,.62)}
+[data-theme="dark"] .sw{background:#2a2a34}
+[data-theme="dark"] .sw .knob{background:#3d3d4a;box-shadow:0 1px 5px rgba(0,0,0,.5)}
+[data-theme="dark"] .sw.on .knob{background:#fff;box-shadow:0 1px 6px rgba(124,108,240,.5)}
+
+/* ---- modern polish ---- */
+body{font-family:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.top h1{font-size:34px;font-weight:850;letter-spacing:-1.4px;background:linear-gradient(120deg,#1a1a22 30%,#5b4ee0 75%,#8b7cf5);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.gear{box-shadow:0 2px 10px rgba(20,20,40,.08);transition:transform .18s ease,box-shadow .18s ease}
+.gear:active{transform:scale(.92)}
+.card{box-shadow:0 4px 20px rgba(18,18,40,.06);border:1px solid rgba(255,255,255,.6)}
+.hero{position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;right:-46px;top:-52px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(139,124,245,.30),transparent 68%)}
+.hero:after{content:"";position:absolute;left:-38px;bottom:-70px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(139,124,245,.16),transparent 70%)}
+.hero .big{font-size:44px;font-weight:850;letter-spacing:-2px}
+.ring b{font-size:21px}
+.kpi,.v{font-variant-numeric:tabular-nums}
+.tile{position:relative;overflow:hidden}
+.tile:after{content:"";position:absolute;right:-24px;bottom:-30px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.22)}
+.tile .v{font-weight:850;letter-spacing:-1.2px}
+.req{transition:transform .15s ease,box-shadow .15s ease;box-shadow:0 2px 12px rgba(18,18,40,.05)}
+.req:active{transform:scale(.98)}
+.req .name{font-weight:750}
+.av{box-shadow:0 2px 8px rgba(18,18,40,.10)}
+.tag{border-radius:10px;font-variant-numeric:tabular-nums}
+nav{box-shadow:0 10px 36px rgba(18,18,40,.16);border:1px solid rgba(255,255,255,.55)}
+nav .pill2{transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .2s ease}
+nav button.on .pill2{transform:scale(1.06)}
+nav button:active .pill2{transform:scale(.9)}
+.seg{box-shadow:0 2px 10px rgba(18,18,40,.05)}
+.seg button,.toggle button{transition:background .2s ease,color .2s ease,transform .12s ease}
+.seg button:active,.toggle button:active{transform:scale(.96)}
+.sw{box-shadow:inset 0 1px 3px rgba(0,0,0,.10)}
+.sw.on{box-shadow:0 0 0 3px rgba(124,108,240,.18)}
+.sheet{border-radius:28px 28px 0 0}
+.sheet h2{font-size:22px;letter-spacing:-.8px}
+.setrow:active{background:rgba(124,108,240,.05);border-radius:14px}
+[data-theme="dark"] .top h1{background:linear-gradient(120deg,#f4f4fa 30%,#a99cf7 75%,#8b7cf5);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+[data-theme="dark"] .card{border:1px solid rgba(255,255,255,.055)}
+[data-theme="dark"] nav{border:1px solid rgba(255,255,255,.07)}
+[data-theme="dark"] .tile:after{background:rgba(255,255,255,.05)}
+
+/* ---- tokens card + stat tiles redesign ---- */
+.tokhead{gap:13px;margin-bottom:18px}
+.tokhead .ico{width:44px;height:44px;border-radius:14px;font-size:19px}
+.tokhead .tt{font-size:18px;font-weight:800;letter-spacing:-.5px}
+.tokhead .ts{font-size:12.5px;color:var(--mu);margin-top:1px}
+.cols3{gap:0}
+.cols3 .k{font-size:11.5px;text-transform:uppercase;letter-spacing:.7px;font-weight:600;opacity:.75}
+.cols3 .v{font-size:21px;font-weight:820;letter-spacing:-.9px;margin-top:3px;font-variant-numeric:tabular-nums}
+.cols3>div+div:before{top:2px;bottom:2px;background:linear-gradient(180deg,transparent,var(--bd) 22%,var(--bd) 78%,transparent)}
+.duo{gap:13px;margin-bottom:14px}
+.tile{border-radius:20px;padding:16px 17px;position:relative;overflow:hidden;min-height:92px;
+display:flex;flex-direction:column;justify-content:space-between}
+.tile .k{font-size:12px;font-weight:700;letter-spacing:.2px;display:flex;gap:6px;align-items:center;opacity:.9}
+.tile .k svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.tile .v{font-size:29px;font-weight:850;letter-spacing:-1.5px;line-height:1;margin:0;font-variant-numeric:tabular-nums}
+.tile:after{right:-30px;bottom:-40px;width:120px;height:120px;background:rgba(255,255,255,.28)}
+.tile.mint{background:linear-gradient(145deg,#c9f2da 0%,#b7ecc9 100%)}
+.tile.butter{background:linear-gradient(145deg,#fdeab4 0%,#fbe08f 100%)}
+.tile.mint .v{color:#0b6b3d}
+.tile.butter .v{color:#6b5200}
+[data-theme="dark"] .tile.mint{background:linear-gradient(145deg,#14301f 0%,#0f2618 100%);color:#86e2b0}
+[data-theme="dark"] .tile.butter{background:linear-gradient(145deg,#33280c 0%,#2a2009 100%);color:#f0d280}
+[data-theme="dark"] .tile.mint .v{color:#9df0bc}
+[data-theme="dark"] .tile.butter .v{color:#f7e08f}
+[data-theme="dark"] .tile:after{background:rgba(255,255,255,.045)}
+[data-theme="dark"] .tokhead .ico{background:linear-gradient(145deg,#3a2024,#2b181b);color:#f0909a}
+[data-theme="dark"] .cols3>div+div:before{background:linear-gradient(180deg,transparent,#23232c 22%,#23232c 78%,transparent)}
+
+/* ---- tile color pass v2 ---- */
+.tile{border:1px solid transparent}
+.tile.mint{background:linear-gradient(145deg,#d8f7e5 0%,#c6f2d8 60%,#bcedd0 100%);
+border-color:rgba(16,185,129,.16);color:#0a6640}
+.tile.butter{background:linear-gradient(145deg,#fdefc4 0%,#fbe6a0 60%,#f8dd8e 100%);
+border-color:rgba(217,164,6,.20);color:#6d5200}
+.tile.mint .v{color:#06633b}
+.tile.butter .v{color:#63490a}
+.tile .k{opacity:1}
+.tile.mint .k{color:#0f7a4d}
+.tile.butter .k{color:#7d5f05}
+.tile:after{background:rgba(255,255,255,.34)}
+[data-theme="dark"] .tile.mint{background:linear-gradient(145deg,rgba(52,211,153,.16) 0%,rgba(52,211,153,.07) 100%);
+border-color:rgba(52,211,153,.22);color:#7ee7b8}
+[data-theme="dark"] .tile.butter{background:linear-gradient(145deg,rgba(250,204,21,.15) 0%,rgba(250,204,21,.055) 100%);
+border-color:rgba(250,204,21,.22);color:#fbe08a}
+[data-theme="dark"] .tile.mint .v{color:#5ff0a8}
+[data-theme="dark"] .tile.butter .v{color:#ffdf7a}
+[data-theme="dark"] .tile.mint .k{color:#79dfae}
+[data-theme="dark"] .tile.butter .k{color:#f3d47c}
+[data-theme="dark"] .tile:after{background:rgba(255,255,255,.035)}
+.tokhead .ico{background:linear-gradient(145deg,#ffe4e6,#ffd0d4);color:#e04a5a}
+[data-theme="dark"] .tokhead .ico{background:linear-gradient(145deg,rgba(244,63,94,.18),rgba(244,63,94,.07));
+border:1px solid rgba(244,63,94,.20);color:#ff8b98}
+.cols3 .k{color:var(--mu)}
+
+/* ---- tokens icon pass ---- */
+.tokhead .ico{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;
+background:linear-gradient(150deg,rgba(124,108,240,.13),rgba(124,108,240,.05));
+border:1px solid rgba(124,108,240,.18);color:#6b5ae0}
+.tokhead .ico svg{display:block}
+[data-theme="dark"] .tokhead .ico{background:linear-gradient(150deg,rgba(139,124,245,.20),rgba(139,124,245,.07));
+border:1px solid rgba(139,124,245,.26);color:#a99cf7}
+
+/* ---- PojokAI badge ---- */
+.ringcol{display:flex;flex-direction:column;align-items:center;flex:0 0 auto}
+.ring{position:relative}
+.ring svg{display:block}
+.brand{margin-top:9px;display:inline-flex;align-items:center;justify-content:center}
+.brand img{width:34px;height:34px;border-radius:50%;object-fit:contain;display:block}
+[data-theme="dark"] .brand img{box-shadow:0 0 0 2px rgba(139,124,245,.34),0 2px 10px rgba(0,0,0,.45)}
+/* ---- language switch ---- */
+#rowlang .setico{background:rgba(124,108,240,.12);color:#6b5ae0}
+[data-theme="dark"] #rowlang .setico{background:rgba(139,124,245,.18);color:#b4a8ff}
+.langsw{display:flex;gap:2px;background:#eeeaf9;border:1px solid rgba(124,108,240,.16);border-radius:999px;padding:3px;flex:0 0 auto}
+.langsw button{border:0;background:transparent;min-width:46px;padding:8px 14px;border-radius:999px;font:700 12.5px/1 ui-rounded,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.3px;color:#7a78a8;cursor:pointer;transition:color .22s ease,transform .16s ease}
+.langsw button:active{transform:scale(.94)}
+.langsw button.on{background:#7c6cf0;color:#fff;box-shadow:0 2px 8px rgba(124,108,240,.38)}
+[data-theme="dark"] .langsw{background:rgba(139,124,245,.10);border-color:rgba(139,124,245,.22)}
+[data-theme="dark"] .langsw button{color:#8f8fa8}
+[data-theme="dark"] .langsw button.on{background:#8b7cf5;color:#100c22;box-shadow:0 2px 10px rgba(139,124,245,.42)}
+/* --- Native Dashboard-Integrated Lock Screen --- */
+.lockscreen{position:fixed;inset:0;background:var(--bg);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top) + 20px) var(--pad) calc(env(safe-area-inset-bottom) + 20px);transition:opacity .28s cubic-bezier(.16,1,.3,1),visibility .28s ease,transform .28s ease;overflow-y:auto;-webkit-overflow-scrolling:touch;user-select:none;-webkit-user-select:none}
+.lockscreen.hidden{opacity:0;visibility:hidden;pointer-events:none;transform:scale(1.03)}
+
+.lock-wrap{width:100%;max-width:350px;margin:auto;display:flex;flex-direction:column;gap:14px}
+.lock-hero{flex-direction:column;align-items:stretch;padding:22px 20px 20px;margin-bottom:0;box-shadow:0 4px 24px rgba(18,18,40,.08)}
+.lock-brand{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.lock-logo-ring{width:46px;height:46px;border-radius:15px;background:#fff;display:grid;place-items:center;box-shadow:0 4px 14px rgba(124,108,240,.18);flex:0 0 auto;overflow:hidden;border:1px solid rgba(124,108,240,.15)}
+[data-theme="dark"] .lock-logo-ring{background:#201b38;border-color:rgba(139,124,245,.28);box-shadow:0 4px 16px rgba(0,0,0,.45)}
+.lock-logo{width:34px;height:34px;border-radius:50%;object-fit:contain}
+.lock-app-title{font-size:21px;font-weight:850;letter-spacing:-.8px;color:#181822;margin-top:2px}
+[data-theme="dark"] .lock-app-title{color:#f5f3ff}
+
+.lock-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.8);border-radius:99px;padding:4px 11px;font-size:11.5px;font-weight:700;letter-spacing:.3px;color:#5b4ee0;box-shadow:0 1px 4px rgba(124,108,240,.12)}
+[data-theme="dark"] .lock-pill{background:rgba(139,124,245,.22);color:#cdc6f2;box-shadow:none;border:1px solid rgba(139,124,245,.3)}
+.lock-pill svg{width:11px;height:11px}
+
+.lock-msg{font-size:13.5px;font-weight:650;color:#5b5478;margin:4px 0 16px;text-align:center;min-height:20px;transition:color .2s ease}
+.lock-msg.err{color:var(--err);font-weight:750}
+[data-theme="dark"] .lock-msg{color:#a49bd0}
+[data-theme="dark"] .lock-msg.err{color:#ff8589}
+
+.pin-dots{display:flex;gap:12px;align-items:center;justify-content:center;padding:4px 0 2px}
+.pin-dots .dot{width:36px;height:7px;border-radius:99px;background:rgba(124,108,240,.20);transition:all .22s cubic-bezier(.34,1.56,.64,1)}
+[data-theme="dark"] .pin-dots .dot{background:rgba(255,255,255,.14)}
+.pin-dots .dot.filled{background:var(--vio);transform:scaleY(1.4);box-shadow:0 2px 10px rgba(124,108,240,.55)}
+.pin-dots.shake{animation:pinshake .36s ease-in-out}
+@keyframes pinshake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-12px)}40%,80%{transform:translateX(12px)}}
+
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;width:100%}
+.nkey{height:62px;border-radius:18px;border:1px solid var(--bd);background:var(--card);font:800 24px/1 ui-rounded,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:-.4px;color:var(--tx);box-shadow:0 2px 8px rgba(18,18,40,.04);display:flex;align-items:center;justify-content:center;cursor:pointer;outline:none;transition:transform .12s cubic-bezier(.2,0,0,1),background .15s ease,border-color .15s ease,box-shadow .15s ease}
+.nkey:active{transform:scale(.92);background:var(--vio-t);color:var(--vio);border-color:rgba(124,108,240,.35);box-shadow:0 0 14px rgba(124,108,240,.22)}
+[data-theme="dark"] .nkey{border-color:rgba(255,255,255,.07);box-shadow:0 2px 8px rgba(0,0,0,.32)}
+[data-theme="dark"] .nkey:active{background:#2b2647;color:#b4a8ff;border-color:rgba(139,124,245,.45);box-shadow:0 0 16px rgba(139,124,245,.3)}
+
+.nkey.fn#btn-bio{background:var(--vio-t);color:var(--vio);border-color:rgba(124,108,240,.24)}
+.nkey.fn#btn-bio:active{background:var(--vio);color:#fff}
+[data-theme="dark"] .nkey.fn#btn-bio{background:rgba(139,124,245,.16);color:#b4a8ff;border-color:rgba(139,124,245,.3)}
+[data-theme="dark"] .nkey.fn#btn-bio:active{background:#7c6cf0;color:#fff}
+
+.nkey.fn#btn-del{background:var(--card);color:var(--mu)}
+.nkey.fn#btn-del:active{background:rgba(229,72,77,.12);color:var(--err);border-color:rgba(229,72,77,.32)}
+[data-theme="dark"] .nkey.fn#btn-del:active{background:rgba(229,72,77,.22);color:#ff8589;border-color:rgba(229,72,77,.45)}
+
+.lock-foot{text-align:center;font-size:12px;font-weight:600;color:var(--mu);opacity:.85;padding-top:4px}
+.btn-sm{border:0;background:var(--vio);color:#fff;font:600 12.5px/1 -apple-system,sans-serif;padding:8px 14px;border-radius:999px;cursor:pointer;box-shadow:0 2px 8px rgba(124,108,240,.35)}
+.btn-sm:active{transform:scale(.94)}
+#rowlock .setico{background:rgba(18,161,80,.12);color:var(--ok)}
+[data-theme="dark"] #rowlock .setico{background:rgba(18,161,80,.18);color:#52d189}
+</style>
+<script>
+(function(){try{var t=localStorage.getItem("9rm-theme");if(t==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}})();
+</script></head><body><div class="top"><h1 id="title">Ringkasan</h1><div style="display:flex;gap:8px;align-items:center"><button class="gear" id="top-lock" title="Kunci"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button><button class="gear" id="gear" title="Pengaturan">&#9881;</button></div></div>
+<div class="wrap">
+<section class="view on" id="v-sum">
+  <div class="seg" id="range">
+    <button data-r="today" class="on">Hari ini</button><button data-r="24h">24 jam</button>
+    <button data-r="7d">7 hari</button>
+    <button data-r="30d">30 hari</button>
+    <button data-r="all">Semua</button>
+  </div>
+  <div id="hero"></div>
+  <div class="card" id="tokens"></div>
+  <div class="duo" id="duo"></div>
+  <div class="sec"><h2 id="sec-usage-title">Penggunaan <small id="usub">24 jam</small></h2>
+    <div class="toggle" id="metric"><button data-m="cost" class="on">Biaya</button><button data-m="requests">Permintaan</button></div>
+  </div>
+  <div class="card" id="chart"></div>
+</section>
+
+<section class="view" id="v-usage">
+  <div class="chiprow" id="feedchips">
+    <button class="chip on" data-f="all">Semua</button><button class="chip" data-f="ok">Berhasil</button>
+    <button class="chip" data-f="err">Gagal</button><span class="sp" id="feedcount"></span>
+  </div>
+  <div id="feed"></div>
+</section>
+
+<section class="view" id="v-prov">
+  <input id="q" type="search" placeholder="Cari penyedia / email..." autocomplete="off">
+  <div class="chips" id="provchips"></div>
+  <div class="card"><div id="provlist"><div class="skel"></div><div class="skel"></div></div>
+  <button class="more" id="moreprov" style="display:none">Muat lebih banyak</button></div>
+</section>
+
+<section class="view" id="v-combos"><div class="card" id="combos"><div class="skel"></div></div></section>
+
+<section class="view" id="v-endpoint">
+  <div class="card"><div class="row" style="padding-top:0"><div class="g">
+    <div class="t" id="lbl-localkey">Kunci lokal (API Key)</div><div class="s" id="keyval">-</div></div>
+    <button class="copy" id="cpkey">Salin</button></div>
+    <div class="row"><div class="g"><div class="t" id="lbl-baseurl">URL Dasar (Base URL)</div><div class="s" id="baseurl">-</div></div>
+    <button class="copy" id="cpbase">Salin</button></div>
+    <div class="row" style="border-bottom:0"><div class="g"><div class="t" id="lbl-modelcombo">Kombinasi model</div>
+    <div class="s" id="comboex">-</div></div></div>
+  </div>
+  <div class="card"><pre id="curlex"></pre></div>
+  <div class="card">
+    <div class="row" style="padding-top:0"><div class="g"><div class="t" id="lbl-health">Status sistem</div></div><span class="badge off" id="b-health">-</span></div>
+    <div class="row"><div class="g"><div class="t" id="lbl-ver">Versi</div><div class="s" id="ver">-</div></div><span class="badge off" id="b-upd">-</span></div>
+    <div class="row" style="border-bottom:0"><div class="g"><div class="t" id="lbl-auth">Autentikasi</div><div class="s" id="authmode">-</div></div><span class="badge off" id="b-auth">-</span></div>
+  </div>
+</section>
+
+<section class="view" id="v-logs">
+  <input id="qlog" type="search" placeholder="Filter log aktivitas..." autocomplete="off">
+  <div class="card"><div class="logs" id="logs"><div class="skel"></div></div>
+  <button class="more" id="morelog">Muat lebih banyak</button></div>
+</section>
+</div>
+
+<nav>
+  <button class="on" data-v="sum"><span class="pill2"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h14V9.5"/></svg></span></button>
+  <button data-v="usage"><span class="pill2"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span></button>
+  <button data-v="combos"><span class="pill2"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="17" r="2.2"/><circle cx="19" cy="17" r="2.2"/><path d="M12 7.2v4.3M10.6 12.6 6.4 15.4M13.4 12.6l4.2 2.8"/></svg></span></button>
+  <button data-v="prov"><span class="pill2"><svg viewBox="0 0 24 24"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M12 2v2.6M12 19.4V22M2 12h2.6M19.4 12H22M4.9 4.9l1.9 1.9M17.2 17.2l1.9 1.9M19.1 4.9l-1.9 1.9M6.8 17.2l-1.9 1.9"/></svg></span></button>
+  <button data-v="endpoint"><span class="pill2"><svg viewBox="0 0 24 24"><circle cx="8" cy="12" r="3.4"/><path d="M11.4 12H21M18 12v3M15 12v2.4"/></svg></span></button>
+  <button data-v="logs"><span class="pill2"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span></button>
+</nav>
+<div id="lockscreen" class="lockscreen">
+  <div class="lock-wrap">
+    <div class="card hero lock-hero">
+      <div class="lock-brand">
+        <div class="lock-logo-ring">
+          <img src="/pojokai.jpg" alt="PojokAI" class="lock-logo">
+        </div>
+        <div>
+          <span class="lock-pill">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span id="t-lockpill">PojokAI Terproteksi</span>
+          </span>
+          <div class="lock-app-title">9Router Mobile</div>
+        </div>
+      </div>
+      <div class="lock-msg" id="lock-msg">Masukkan PIN untuk membuka</div>
+      <div class="pin-dots" id="pin-dots">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+    </div>
+    <div class="numpad">
+      <button class="nkey" data-k="1">1</button>
+      <button class="nkey" data-k="2">2</button>
+      <button class="nkey" data-k="3">3</button>
+      <button class="nkey" data-k="4">4</button>
+      <button class="nkey" data-k="5">5</button>
+      <button class="nkey" data-k="6">6</button>
+      <button class="nkey" data-k="7">7</button>
+      <button class="nkey" data-k="8">8</button>
+      <button class="nkey" data-k="9">9</button>
+      <button class="nkey fn" id="btn-bio" title="Face ID / Touch ID">
+        <svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 3H5a2 2 0 0 0-2 2v2M17 3h2a2 2 0 0 1 2 2v2M7 21H5a2 2 0 0 1-2-2v-2M17 21h2a2 2 0 0 0 2-2v-2M9 9h.01M15 9h.01M10 13c.7.7 3.3.7 4 0M12 11v2"/>
+        </svg>
+      </button>
+      <button class="nkey" data-k="0">0</button>
+      <button class="nkey fn" id="btn-del" title="Hapus">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM18 9l-6 6M12 9l6 6"/>
+        </svg>
+      </button>
+    </div>
+    <div class="lock-foot">
+      <span id="t-lockfoot">Akses Terenkripsi &bull; Sesi 30 Hari</span>
+    </div>
+  </div>
+</div>
+<div class="sheetbg" id="sheetbg"></div>
+<div class="sheet" id="sheet">
+  <div class="grip"></div>
+  <h2>Pengaturan</h2>
+  <div class="setrow" id="rowtheme">
+    <div class="setico" id="setico">&#127769;</div>
+    <div class="setmid"><div class="settitle">Mode gelap</div>
+    <div class="setsub">Tampilan nyaman di malam hari</div></div>
+    <div class="sw"><div class="knob"></div></div>
+  </div>
+  <div class="setrow" id="rowlang">
+    <div class="setico"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 2.6 15 0 18M12 3c-2.6 2.5-2.6 15 0 18"/></svg></div>
+    <div class="setmid"><div class="settitle">Bahasa</div>
+    <div class="setsub">Bahasa tampilan aplikasi</div></div>
+    <div class="langsw"><button id="langid" class="on">ID</button><button id="langen">EN</button></div>
+  </div>
+  <div class="setrow" id="rowlock">
+    <div class="setico"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+    <div class="setmid"><div class="settitle" id="t-locktitle">Kunci Layar & PIN</div>
+    <div class="setsub" id="t-locksub">Amankan akses dashboard di HP</div></div>
+    <div style="display:flex;gap:6px">
+      <button class="btn-sm" id="btn-locknow" style="background:#4b4b5e">Kunci</button>
+      <button class="btn-sm" id="btn-resetpin">Ubah PIN</button>
+    </div>
+  </div>
+</div>
+<script>
+const $ = s => document.querySelector(s);
+
+const TITLES = {
+  id: { sum: "Ringkasan", usage: "Penggunaan", prov: "Penyedia API", combos: "Kombinasi Model", endpoint: "Endpoint API", logs: "Log Sistem" },
+  en: { sum: "Summary", usage: "Usage", prov: "Providers", combos: "Combos", endpoint: "Endpoint", logs: "System Logs" }
+};
+const getTitle = v => (TITLES[lang] && TITLES[lang][v]) || TITLES.id[v] || v;
+
+const I18N = {
+  id: {
+    settings: "Pengaturan",
+    darkMode: "Mode gelap",
+    darkSub: "Tampilan nyaman di malam hari",
+    language: "Bahasa",
+    langSub: "Bahasa tampilan aplikasi",
+    today: "Hari ini",
+    h24: "24 jam",
+    d7: "7 hari",
+    d30: "30 hari",
+    all: "Semua",
+    usage: "Penggunaan",
+    cost: "Biaya",
+    reqs: "Permintaan",
+    success: "Berhasil",
+    error: "Gagal",
+    searchProv: "Cari penyedia / email...",
+    searchLog: "Filter log aktivitas...",
+    more: "Muat lebih banyak",
+    salin: "Salin",
+    tersalin: "Tersalin",
+    totalCost: "total biaya",
+    totalReq: "total permintaan",
+    noLogs: "Tidak ada log aktivitas",
+    fail: "Gagal memuat: ",
+    versi: "Versi",
+    footer: "9Router Mobile · sinkron dengan server lokal",
+    lockTitle: "Kunci Layar & Face ID",
+    lockSub: "PIN 4 digit & biometrik Face ID",
+    lockBtn: "Kunci",
+    changePin: "Ubah PIN",
+    enterPin: "Masukkan PIN untuk membuka",
+    createPin: "Buat PIN 4 Digit Anda",
+    confirmPin: "Konfirmasi PIN 4 Digit Anda",
+    wrongPin: "PIN salah, silakan coba lagi",
+    pinMismatch: "PIN tidak cocok! Buat PIN baru:",
+    pinSaved: "PIN berhasil disimpan!",
+    totCostSub: "Total biaya",
+    requestsLbl: "permintaan",
+    tokensLbl: "Token",
+    tokensTotal: "total token",
+    inputLbl: "Masukan",
+    outputLbl: "Keluaran",
+    cachedLbl: "Tersimpan",
+    reqsTile: "Permintaan",
+    costTile: "Biaya",
+    noReqs: "Belum ada permintaan",
+    allProv: "Semua",
+    provFrom: "dari",
+    noCombos: "Belum ada kombinasi model",
+    localKey: "Kunci lokal (API Key)",
+    noKey: "Tidak ada API key",
+    baseUrl: "URL Dasar (Base URL)",
+    modelCombo: "Kombinasi model",
+    healthLbl: "Status sistem",
+    authLbl: "Autentikasi",
+    healthOk: "Sehat",
+    healthDown: "Gangguan",
+    upToDate: "Terbaru",
+    updateAvail: "Pembaruan",
+    authProtected: "Terproteksi",
+    authOpen: "Terbuka",
+    authReqLogin: "login wajib",
+    authPubOpen: "terbuka publik",
+    tagIn: "masuk",
+    tagOut: "keluar",
+    statActive: "aktif",
+    statOff: "nonaktif",
+    statError: "error",
+    lockPillSecured: "PojokAI Terproteksi",
+    lockFoot: "Akses Terenkripsi · Sesi 30 Hari",
+    secUsage: "Penggunaan",
+    bioPrompt: "Aktifkan Face ID / Touch ID untuk membuka aplikasi lebih cepat?",
+    bioSuccess: "Face ID / Biometrik berhasil diaktifkan!",
+    bioNeedPin: "Silakan buat PIN terlebih dahulu.",
+    bioFail: "Face ID dibatalkan / gagal. Masukkan PIN."
+  },
+  en: {
+    settings: "Settings",
+    darkMode: "Dark mode",
+    darkSub: "Comfortable viewing at night",
+    language: "Language",
+    langSub: "App display language",
+    today: "Today",
+    h24: "24 hours",
+    d7: "7 days",
+    d30: "30 days",
+    all: "All",
+    usage: "Usage",
+    cost: "Cost",
+    reqs: "Requests",
+    success: "Success",
+    error: "Error",
+    searchProv: "Search provider / email...",
+    searchLog: "Filter activity logs...",
+    more: "Load more",
+    salin: "Copy",
+    tersalin: "Copied",
+    totalCost: "total cost",
+    totalReq: "total requests",
+    noLogs: "No activity logs",
+    fail: "Failed to load: ",
+    versi: "Version",
+    footer: "9Router Mobile · synced with local server",
+    lockTitle: "Screen Lock & Face ID",
+    lockSub: "4-digit PIN & Face ID biometrics",
+    lockBtn: "Lock",
+    changePin: "Change PIN",
+    enterPin: "Enter PIN to unlock",
+    createPin: "Create 4-Digit PIN",
+    confirmPin: "Confirm 4-Digit PIN",
+    wrongPin: "Wrong PIN, please try again",
+    pinMismatch: "PINs do not match! Enter new PIN:",
+    pinSaved: "PIN saved successfully!",
+    totCostSub: "Total cost",
+    requestsLbl: "requests",
+    tokensLbl: "Tokens",
+    tokensTotal: "total tokens",
+    inputLbl: "Input",
+    outputLbl: "Output",
+    cachedLbl: "Cached",
+    reqsTile: "Requests",
+    costTile: "Cost",
+    noReqs: "No requests yet",
+    allProv: "All",
+    provFrom: "of",
+    noCombos: "No model combos yet",
+    localKey: "Local Key (API Key)",
+    noKey: "No API keys",
+    baseUrl: "Base URL",
+    modelCombo: "Model Combo",
+    healthLbl: "System Health",
+    authLbl: "Authentication",
+    healthOk: "Healthy",
+    healthDown: "Down",
+    upToDate: "Up-to-date",
+    updateAvail: "Update",
+    authProtected: "Protected",
+    authOpen: "Open",
+    authReqLogin: "login required",
+    authPubOpen: "public access",
+    tagIn: "in",
+    tagOut: "out",
+    statActive: "active",
+    statOff: "off",
+    statError: "error",
+    lockPillSecured: "PojokAI Secured",
+    lockFoot: "Encrypted Access · 30-Day Session",
+    secUsage: "Usage",
+    bioPrompt: "Enable Face ID / Touch ID to unlock app faster?",
+    bioSuccess: "Face ID / Biometrics enabled successfully!",
+    bioNeedPin: "Please create a PIN first.",
+    bioFail: "Face ID cancelled or failed. Please enter PIN."
+  }
+};
+
+let lang = localStorage.getItem("9rm-lang") || "id";
+const T = k => (I18N[lang] && I18N[lang][k]) || I18N.id[k] || k;
+
+function applyLang() {
+  document.querySelector("#sheet h2").textContent = T("settings");
+  document.querySelector("#rowtheme .settitle").textContent = T("darkMode");
+  document.querySelector("#rowtheme .setsub").textContent = T("darkSub");
+  document.querySelector("#rowlang .settitle").textContent = T("language");
+  document.querySelector("#rowlang .setsub").textContent = T("langSub");
+  document.querySelector("#t-locktitle") && (document.querySelector("#t-locktitle").textContent = T("lockTitle"));
+  document.querySelector("#t-locksub") && (document.querySelector("#t-locksub").textContent = T("lockSub"));
+  document.querySelector("#btn-locknow") && (document.querySelector("#btn-locknow").textContent = T("lockBtn"));
+  document.querySelector("#btn-resetpin") && (document.querySelector("#btn-resetpin").textContent = T("changePin"));
+
+  const curV = document.querySelector("nav button.on")?.dataset.v || "sum";
+  $("#title").textContent = getTitle(curV);
+
+  const rmap = {today:T("today"),"24h":T("h24"),"7d":T("d7"),"30d":T("d30"),all:T("all")};
+  document.querySelectorAll("#range button").forEach(b => b.textContent = rmap[b.dataset.r]);
+  document.querySelector("#usub") && (document.querySelector("#usub").textContent = rmap[state.range]);
+  
+  const secTitle = document.querySelector("#sec-usage-title");
+  if (secTitle && secTitle.childNodes[0]) {
+    secTitle.childNodes[0].textContent = T("secUsage") + " ";
+  }
+
+  document.querySelector("#metric [data-m=cost]").textContent = T("cost");
+  document.querySelector("#metric [data-m=requests]").textContent = T("reqs");
+
+  const fc = document.querySelector("#feedchips");
+  if (fc) {
+    fc.querySelector("[data-f=all]").textContent = T("all");
+    fc.querySelector("[data-f=ok]").textContent = T("success");
+    fc.querySelector("[data-f=err]").textContent = T("error");
+  }
+
+  document.querySelector("#lbl-localkey") && (document.querySelector("#lbl-localkey").textContent = T("localKey"));
+  document.querySelector("#lbl-baseurl") && (document.querySelector("#lbl-baseurl").textContent = T("baseUrl"));
+  document.querySelector("#lbl-modelcombo") && (document.querySelector("#lbl-modelcombo").textContent = T("modelCombo"));
+  document.querySelector("#lbl-health") && (document.querySelector("#lbl-health").textContent = T("healthLbl"));
+  document.querySelector("#lbl-ver") && (document.querySelector("#lbl-ver").textContent = T("versi"));
+  document.querySelector("#lbl-auth") && (document.querySelector("#lbl-auth").textContent = T("authLbl"));
+
+  document.querySelector("#t-lockpill") && (document.querySelector("#t-lockpill").textContent = T("lockPillSecured"));
+  document.querySelector("#t-lockfoot") && (document.querySelector("#t-lockfoot").textContent = T("lockFoot"));
+
+  if (pinSetupStage === 0) setLockMsg(T("enterPin"));
+  else if (pinSetupStage === 1) setLockMsg(T("createPin"));
+  else if (pinSetupStage === 2) setLockMsg(T("confirmPin"));
+
+  document.querySelector("#q").placeholder = T("searchProv");
+  document.querySelector("#qlog").placeholder = T("searchLog");
+  document.querySelector("#moreprov").textContent = T("more");
+  document.querySelector("#morelog").textContent = T("more");
+  document.querySelectorAll(".copy").forEach(b => {
+    b.textContent = T("salin");
+  });
+
+  for (const k in rendered) rendered[k] = 0;
+  render(curV);
+}
+
+// Served by 9Router itself at /mobile, so /api/* is same-origin. No proxy, no CORS.
+const ORIGIN = "";
+const state = { range: "today", metric: "cost", feed: "all", prov: [], pf: "all", pshown: 100, q: "", qlog: "", logs: [], lshown: 50, chart: [], hist: null, prices: null };
+
+const j = async p => {
+  const r = await fetch(ORIGIN + p);
+  if (!r.ok) throw new Error(p + " -> " + r.status);
+  return r.json();
+};
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const usd = n => n === 0 ? "$0" : n < 0.001 ? "$" + n.toFixed(5) : n < 1 ? "$" + n.toFixed(4) : "$" + n.toFixed(2);
+const tok = n => n >= 1e9 ? (n / 1e9).toFixed(1) + "B" : n >= 1e6 ? (n / 1e6).toFixed(1) + "M" : n >= 1e3 ? (n / 1e3).toFixed(1) + "K" : String(Math.round(n));
+const ago = ts => {
+  const m = Math.round((Date.now() - new Date(ts)) / 60000);
+  if (lang === "id") {
+    if (m < 60) return m + " mnt";
+    if (m < 1440) return Math.round(m / 60) + " jam";
+    return Math.round(m / 1440) + " hari";
+  } else {
+    if (m < 60) return m + "m";
+    if (m < 1440) return Math.round(m / 60) + "h";
+    return Math.round(m / 1440) + "d";
+  }
+};
+const shortProv = p => p.startsWith("openai-compatible-chat") ? "openai-compat" : p;
+
+const sheet = $("#sheet"), sheetbg = $("#sheetbg"), sw = $("#rowtheme .sw");
+function syncThemeUI(){
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
+  sw.classList.toggle("on", dark);
+  $("#setico").innerHTML = dark ? "&#9728;" : "&#127769;";
+}
+function openSheet(){ sheet.classList.add("on"); sheetbg.classList.add("on"); syncThemeUI(); }
+function closeSheet(){ sheet.classList.remove("on"); sheetbg.classList.remove("on"); }
+$("#gear").onclick = openSheet;
+sheetbg.onclick = closeSheet;
+$("#rowtheme").onclick = () => {
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
+  if (dark) document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.setAttribute("data-theme", "dark");
+  try { localStorage.setItem("9rm-theme", dark ? "light" : "dark"); } catch (e) {}
+  syncThemeUI();
+};
+const rendered = {};
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
+  const v = b.dataset.v;
+  document.querySelectorAll("nav button").forEach(x => x.classList.toggle("on", x === b));
+  document.querySelectorAll(".view").forEach(x => x.classList.toggle("on", x.id === "v-" + v));
+  $("#title").textContent = getTitle(v);
+  render(v);
+});
+async function render(v) {
+  if (localStorage.getItem("9rm-pin-hash") && !isUnlocked()) return;
+  if (rendered[v]) return;
+  rendered[v] = 1;
+  try {
+    if (v === "sum") await loadSummary();
+    if (v === "usage") await loadFeed();
+    if (v === "prov") await loadProviders();
+    if (v === "combos") await loadCombos();
+    if (v === "endpoint") await loadEndpoint();
+    if (v === "logs") await loadLogs();
+  } catch (e) {
+    rendered[v] = 0;
+    const box = $("#v-" + v);
+    box.innerHTML = '<div class="card"><div class="empty">' + T("fail") + esc(e.message) + '</div></div>';
+  }
+}
+
+// ---------- SUMMARY ----------
+document.querySelectorAll("#range button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("#range button").forEach(x => x.classList.toggle("on", x === b));
+  state.range = b.dataset.r; rendered.sum = 0; render("sum");
+});
+document.querySelectorAll("#metric button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("#metric button").forEach(x => x.classList.toggle("on", x === b));
+  state.metric = b.dataset.m; drawChart();
+});
+
+async function loadSummary() {
+  const [s, chart] = await Promise.all([j("/api/usage/stats?period=" + state.range), j("/api/usage/chart?period=" + state.range)]);
+  state.chart = chart;
+  const periodCost = s.totalCost || 0;
+  const periodReq = s.totalRequests || 0;
+  const rangeLbl = {today:T("today"),"24h":T("h24"),"7d":T("d7"),"30d":T("d30"),all:T("all")}[state.range];
+  const all = state.allTimeCost != null ? state.allTimeCost : (state.allTimeCost = await j("/api/usage/stats?period=all").then(x => { state.allTimeCost = x.totalCost; return x.totalCost; }).catch(() => periodCost));
+  const pct = all ? Math.min(100, Math.round(periodCost / all * 100)) : 0;
+  const R = 36, C = 2 * Math.PI * R;
+
+  $("#hero").innerHTML =
+    '<div class="card hero"><div><div class="lbl"><svg class="lbllogosvg" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="13" width="18" height="8" rx="2.5"/><path d="M7 17h.01M11 17h2"/><path d="M6.5 9.5a6 6 0 0 1 11 0"/><path d="M9.3 12a3.2 3.2 0 0 1 5.4 0"/></svg>9Router</div>' +
+    '<div class="sub">' + T("totCostSub") + ' ' + rangeLbl + '</div><div class="big">' + esc(usd(periodCost)) + '</div>' +
+    '<div class="cost24">' + esc(usd(periodCost)) + ' - ' + rangeLbl + '</div>' +
+    '<span class="pill">' + periodReq.toLocaleString(lang === "id" ? "id-ID" : "en-US") + ' ' + T("requestsLbl") + '</span></div>' +
+    '<div class="ringcol"><div class="ring"><svg width="92" height="92"><circle cx="46" cy="46" r="' + R + '" stroke="rgba(255,255,255,.55)" stroke-width="9" fill="none"/>' +
+    '<circle cx="46" cy="46" r="' + R + '" stroke="#7c6cf0" stroke-width="9" fill="none" stroke-linecap="round" ' +
+    'stroke-dasharray="' + C + '" stroke-dashoffset="' + (C - C * Math.min(pct, 100) / 100) + '"/></svg>' +
+    '<b>' + pct + '%</b><span>' + rangeLbl + '</span></div>' +
+    '<div class="brand"><img src="/pojokai.png" alt="PojokAI"></div></div>';
+
+  const pin = s.totalPromptTokens, pout = s.totalCompletionTokens, pcache = s.totalCachedTokens;
+  $("#tokens").innerHTML =
+    '<div class="tokhead"><div class="ico"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3.5 7.5 12 12l8.5-4.5L12 3z"/><path d="M3.5 12 12 16.5 20.5 12"/><path d="M3.5 16.5 12 21l8.5-4.5"/></svg></div>' +
+    '<div><div class="tt">' + T("tokensLbl") + '</div><div class="ts">' + esc(tok(pin + pout)) + ' ' + T("tokensTotal") + '</div></div></div>' +
+    '<div class="cols3"><div><div class="k">' + T("inputLbl") + '</div><div class="v">' + esc(tok(pin)) + '</div></div>' +
+    '<div><div class="k">' + T("outputLbl") + '</div><div class="v">' + esc(tok(pout)) + '</div></div>' +
+    '<div><div class="k">' + T("cachedLbl") + '</div><div class="v">' + esc(tok(pcache)) + '</div></div></div>';
+
+  $("#duo").innerHTML =
+    '<div class="tile mint"><div class="k"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>' + T("reqsTile") + '</div><div class="v">' + periodReq.toLocaleString(lang === "id" ? "id-ID" : "en-US") + '</div></div>' +
+    '<div class="tile butter"><div class="k"><svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.6"/></svg>' + T("costTile") + '</div><div class="v">' + esc(usd(periodCost)) + '</div></div>';
+
+  $("#usub").textContent = rangeLbl;
+  drawChart();
+}
+
+function drawChart() {
+  const chart = state.chart || [];
+  if (!chart.length) return;
+  const isCost = state.metric === "cost";
+  const vals = chart.map(d => isCost ? d.cost : d.requests);
+  const max = Math.max(...vals, isCost ? 0.01 : 1);
+  const sum = vals.reduce((a, b) => a + b, 0);
+
+  const totalValStr = isCost ? esc(usd(sum)) : sum.toLocaleString(lang === "id" ? "id-ID" : "en-US");
+  const totalSubStr = (isCost ? T("totalCost") : T("totalReq")) + " · " + (lang === "id" ? "ketuk batang untuk cek jam" : "tap bar to inspect hour");
+
+  // Format axis timestamps evenly across the width so text never crowds or clips
+  let axisIndices = [];
+  if (chart.length <= 5) {
+    axisIndices = chart.map((_, i) => i);
+  } else {
+    axisIndices = [
+      0,
+      Math.round((chart.length - 1) * 0.25),
+      Math.round((chart.length - 1) * 0.5),
+      Math.round((chart.length - 1) * 0.75),
+      chart.length - 1
+    ];
+  }
+  axisIndices = [...new Set(axisIndices)];
+  const axisHtml = '<div class="baraxis">' + axisIndices.map(idx => '<span>' + esc(chart[idx].label) + '</span>').join("") + '</div>';
+
+  $("#chart").innerHTML =
+    '<div class="chart-head">' +
+      '<div class="chart-info">' +
+        '<div class="bigcost" id="chart-val">' + totalValStr + '</div>' +
+        '<div class="bigcost-sub" id="chart-sub"><span id="chart-sub-text">' + totalSubStr + '</span></div>' +
+      '</div>' +
+      '<button class="chart-reset-btn" id="chart-reset" style="display:none" title="Reset">✕ ' + (lang === "id" ? "Reset" : "Reset") + '</button>' +
+    '</div>' +
+    '<div class="bars" id="chart-bars">' + chart.map((d, i) =>
+      '<i data-i="' + i + '" class="' + (i === chart.length - 1 ? "now" : "") + '" style="height:' +
+      Math.max(4, vals[i] / max * 100) + '%" title="' + esc(d.label) + '"></i>').join("") +
+    '</div>' +
+    axisHtml;
+
+  const barsBox = $("#chart-bars");
+  const valEl = $("#chart-val");
+  const subText = $("#chart-sub-text");
+  const resetBtn = $("#chart-reset");
+  let activeIdx = -1;
+
+  function resetChart() {
+    activeIdx = -1;
+    barsBox.classList.remove("has-active");
+    barsBox.querySelectorAll("i.active").forEach(el => el.classList.remove("active"));
+    valEl.textContent = totalValStr;
+    valEl.style.color = "";
+    subText.textContent = totalSubStr;
+    resetBtn.style.display = "none";
+  }
+
+  function selectBar(idx) {
+    if (idx < 0 || idx >= chart.length) return;
+    if (activeIdx === idx) {
+      resetChart();
+      return;
+    }
+    activeIdx = idx;
+    const d = chart[idx];
+    const val = vals[idx];
+    barsBox.classList.add("has-active");
+    barsBox.querySelectorAll("i").forEach((el, i) => {
+      el.classList.toggle("active", i === idx);
+    });
+
+    const valDisplay = isCost ? esc(usd(val)) : val.toLocaleString(lang === "id" ? "id-ID" : "en-US") + " " + T("requestsLbl");
+    valEl.textContent = valDisplay;
+    valEl.style.color = "var(--vio)";
+
+    const hourPrefix = lang === "id" ? "Jam " : "";
+    let detailStr = "";
+    if (d.cost === 0 && d.requests === 0) {
+      detailStr = hourPrefix + d.label + " · " + (lang === "id" ? "Tidak ada aktivitas" : "No activity");
+    } else {
+      const otherMetric = isCost ? (d.requests.toLocaleString(lang === "id" ? "id-ID" : "en-US") + " req") : esc(usd(d.cost));
+      detailStr = hourPrefix + d.label + " · " + otherMetric + " · " + esc(tok(d.tokens)) + " tok";
+    }
+    subText.textContent = detailStr;
+    resetBtn.style.display = "inline-flex";
+  }
+
+  barsBox.onclick = (e) => {
+    const bar = e.target.closest("i");
+    if (!bar) return;
+    const idx = Number(bar.dataset.i);
+    selectBar(idx);
+  };
+
+  // Support swipe/scrubbing across bars
+  let isTouching = false;
+  barsBox.ontouchstart = (e) => {
+    isTouching = true;
+    handleTouch(e);
+  };
+  barsBox.ontouchmove = (e) => {
+    if (isTouching) handleTouch(e);
+  };
+  barsBox.ontouchend = () => {
+    isTouching = false;
+  };
+
+  function handleTouch(e) {
+    const touch = e.touches ? e.touches[0] : e;
+    const rect = barsBox.getBoundingClientRect();
+    const relX = touch.clientX - rect.left;
+    if (relX < 0 || relX > rect.width) return;
+    const all = barsBox.querySelectorAll("i");
+    if (!all.length) return;
+    const w = rect.width / all.length;
+    const idx = Math.min(all.length - 1, Math.max(0, Math.floor(relX / w)));
+    selectBar(idx);
+  }
+
+  resetBtn.onclick = (e) => {
+    e.stopPropagation();
+    resetChart();
+  };
+}
+
+// ---------- USAGE FEED ----------
+document.querySelectorAll("#feedchips .chip").forEach(b => b.onclick = () => {
+  document.querySelectorAll("#feedchips .chip").forEach(x => x.classList.toggle("on", x === b));
+  state.feed = b.dataset.f; drawFeed();
+});
+const AV = ["#ece9fd", "#e3f3e9", "#fdeede", "#fde8ef", "#fdf6dc", "#e4eefb"];
+async function loadFeed() {
+  const s = await j("/api/usage/history");
+  state.feedData = (s.recentRequests || []).slice().reverse();
+  drawFeed();
+}
+function drawFeed() {
+  const all = state.feedData || [];
+  const list = all.filter(x => state.feed === "all" ? true : state.feed === "ok" ? x.status === "ok" : x.status !== "ok");
+  $("#feedcount").textContent = all.length + "+";
+  $("#feed").innerHTML = list.map((x, i) => {
+    const ok = x.status === "ok";
+    const totalTok = x.promptTokens + x.completionTokens;
+    return '<div class="req"><div class="av" style="background:' + AV[i % AV.length] + '">' +
+      '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="' + (ok ? "#2f2a52" : "#b42318") +
+      '" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">' +
+      (ok ? '<path d="M4 12.5 9 17.5 20 6.5"/>' : '<path d="M6 6l12 12M18 6 6 18"/>') + '</svg></div>' +
+      '<div class="mid"><div class="name">' + esc(x.model) + '</div>' +
+      '<div class="meta">' + esc(shortProv(x.provider)) + ' · ' + ago(x.timestamp) + '</div>' +
+      '<div class="tags"><span class="tag in">' + T("tagIn") + ' ' + esc(tok(x.promptTokens)) + '</span>' +
+      '<span class="tag out">' + T("tagOut") + ' ' + esc(tok(x.completionTokens)) + '</span>' +
+      '<span class="tag all">' + esc(tok(totalTok)) + '</span></div></div>' +
+      '<div class="cost">' + (x.cost != null ? esc(usd(x.cost)) : "") + '</div></div>';
+  }).join("") || '<div class="card"><div class="empty">' + T("noReqs") + '</div></div>';
+}
+
+// ---------- PROVIDERS ----------
+async function loadProviders() {
+  const d = await j("/api/providers");
+  state.prov = d.connections || [];
+  const counts = {};
+  state.prov.forEach(c => counts[c.provider] = (counts[c.provider] || 0) + 1);
+  $("#provchips").innerHTML = '<button class="chip2 on" data-p="all">' + T("allProv") + ' ' + state.prov.length + '</button>' +
+    Object.entries(counts).sort((a, b) => b[1] - a[1])
+      .map(([p, n]) => '<button class="chip2" data-p="' + esc(p) + '">' + esc(shortProv(p)) + ' ' + n + '</button>').join("");
+  $("#provchips").onclick = e => {
+    const b = e.target.closest(".chip2"); if (!b) return;
+    state.pf = b.dataset.p; state.pshown = 100;
+    $("#provchips").querySelectorAll(".chip2").forEach(c => c.classList.toggle("on", c === b));
+    drawProviders();
+  };
+  $("#q").oninput = e => { state.q = e.target.value.toLowerCase(); state.pshown = 100; drawProviders(); };
+  $("#moreprov").onclick = () => { state.pshown += 100; drawProviders(); };
+  drawProviders();
+}
+function drawProviders() {
+  let list = state.prov.filter(c => (state.pf === "all" || c.provider === state.pf) &&
+    (!state.q || (c.name + " " + c.email + " " + c.provider).toLowerCase().includes(state.q)));
+  const total = list.length;
+  list = list.slice(0, state.pshown);
+  $("#provlist").innerHTML = list.map(c => {
+    const cls = !c.isActive ? "off" : c.lastError ? "warn" : "ok";
+    const txt = !c.isActive ? T("statOff") : c.lastError ? T("statError") : T("statActive");
+    return '<div class="row"><div class="g"><div class="t">' + esc(c.name || c.email || c.id.slice(0, 8)) + '</div>' +
+      '<div class="s">' + esc(shortProv(c.provider)) + (c.errorCode ? " · HTTP " + c.errorCode : "") + '</div></div>' +
+      '<span class="badge ' + cls + '">' + txt + '</span></div>' ;
+  }).join("") + '<div class="empty">' + list.length + ' ' + T("provFrom") + ' ' + total + '</div>';
+  $("#moreprov").style.display = total > state.pshown ? "" : "none";
+}
+
+// ---------- COMBOS ----------
+async function loadCombos() {
+  const d = await j("/api/combos");
+  $("#combos").innerHTML = (d.combos || []).map(c =>
+    '<div class="row"><div class="g"><div class="t">' + esc(c.name) + '</div>' +
+    '<div class="s">' + esc(c.models.join(" → ")) + '</div></div>' +
+    '<span class="badge off">' + c.models.length + '</span></div>').join("")
+    || '<div class="empty">' + T("noCombos") + '</div>';
+}
+
+// ---------- ENDPOINT ----------
+const mask = s => !s ? "" : s.length <= 12 ? "*".repeat(s.length) : s.slice(0, 8) + "..." + s.slice(-4);
+async function loadEndpoint() {
+  const base = location.origin + "/v1";
+  $("#baseurl").textContent = base;
+  const [keys, health, ver, auth, combos] = await Promise.allSettled([
+    j("/api/keys"), j("/api/health"), j("/api/version"), j("/api/auth/status"), j("/api/combos")]);
+  const k = keys.status === "fulfilled" ? (keys.value.keys || []) : [];
+  const key = k[0] ? k[0].key : "sk-...";
+  $("#keyval").textContent = k[0] ? mask(key) : T("noKey");
+  const comboName = combos.status === "fulfilled" && combos.value.combos?.[0] ? combos.value.combos[0].name : "combo-gemini";
+  $("#comboex").textContent = comboName;
+  $("#curlex").textContent = 'curl ' + base + '/chat/completions \
+  -H "Authorization: Bearer ' + mask(key) +
+    '" \
+  -H "Content-Type: application/json" \
+  -d ' + String.fromCharCode(39) +
+    '{"model":"' + comboName + '","messages":[{"role":"user","content":"hi"}]}' + String.fromCharCode(39);
+  const setB = (sel, v, cls) => { const e = $(sel); e.textContent = v; e.className = "badge " + cls; };
+  setB("#b-health", health.status === "fulfilled" ? T("healthOk") : T("healthDown"), health.status === "fulfilled" ? "ok" : "err");
+  if (ver.status === "fulfilled") {
+    $("#ver").textContent = "v" + ver.value.currentVersion;
+    setB("#b-upd", ver.value.hasUpdate ? (T("updateAvail") + " " + ver.value.latestVersion) : T("upToDate"), ver.value.hasUpdate ? "warn" : "ok");
+  }
+  if (auth.status === "fulfilled") {
+    const a = auth.value;
+    $("#authmode").textContent = a.authMode + (a.requireLogin ? (" · " + T("authReqLogin")) : (" · " + T("authPubOpen")));
+    setB("#b-auth", a.requireLogin ? T("authProtected") : T("authOpen"), a.requireLogin ? "ok" : "warn");
+  }
+  const cp = (btn, val) => btn.onclick = async () => {
+    await navigator.clipboard.writeText(val);
+    const orig = btn.textContent;
+    btn.textContent = T("tersalin");
+    setTimeout(() => btn.textContent = orig, 1200);
+  };
+  cp($("#cpkey"), key); cp($("#cpbase"), base);
+}
+
+// ---------- LOGS ----------
+async function loadLogs() {
+  state.logs = ((await j("/api/usage/logs")) || []).reverse();
+  drawLogs();
+  $("#qlog").oninput = e => { state.qlog = e.target.value.toLowerCase(); state.lshown = 50; drawLogs(); };
+  $("#morelog").onclick = () => { state.lshown += 50; drawLogs(); };
+}
+function drawLogs() {
+  const f = state.logs.filter(l => !state.qlog || l.toLowerCase().includes(state.qlog));
+  $("#logs").innerHTML = f.slice(0, state.lshown).map(l => '<div class="l">' + esc(l) + '</div>').join("")
+    || '<div class="empty">' + T("noLogs") + '</div>';
+  $("#morelog").style.display = f.length > state.lshown ? "" : "none";
+}
+
+function wireLang() {
+  const bid = $("#langid"), ben = $("#langen");
+  const sync = () => { bid.classList.toggle("on", lang === "id"); ben.classList.toggle("on", lang === "en"); };
+  bid.onclick = () => { lang = "id"; localStorage.setItem("9rm-lang", "id"); sync(); applyLang(); };
+  ben.onclick = () => { lang = "en"; localStorage.setItem("9rm-lang", "en"); sync(); applyLang(); };
+  sync();
+}
+
+// ---------- LOCK SCREEN (PIN & FACE ID) ----------
+let currentPin = "";
+let pinSetupStage = 0; // 0: unlock, 1: create new, 2: confirm new
+let tempNewPin = "";
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function updatePinDots() {
+  const dots = document.querySelectorAll("#pin-dots .dot");
+  dots.forEach((d, i) => d.classList.toggle("filled", i < currentPin.length));
+}
+
+function shakeDots() {
+  const el = $("#pin-dots");
+  el.classList.add("shake");
+  setTimeout(() => el.classList.remove("shake"), 380);
+}
+
+function setLockMsg(text, isErr = false) {
+  const el = $("#lock-msg");
+  if (!el) return;
+  el.textContent = text;
+  el.classList.toggle("err", !!isErr);
+}
+
+async function handlePinComplete() {
+  const savedHash = localStorage.getItem("9rm-pin-hash");
+  if (!savedHash || pinSetupStage > 0) {
+    if (pinSetupStage === 1) {
+      tempNewPin = currentPin;
+      currentPin = "";
+      pinSetupStage = 2;
+      updatePinDots();
+      setLockMsg(T("confirmPin"));
+      return;
+    }
+    if (pinSetupStage === 2) {
+      if (currentPin === tempNewPin) {
+        const hash = await sha256(currentPin);
+        localStorage.setItem("9rm-pin-hash", hash);
+        pinSetupStage = 0;
+        tempNewPin = "";
+        currentPin = "";
+        updatePinDots();
+        setLockMsg(T("pinSaved"), false);
+        setTimeout(() => {
+          unlockDashboard();
+          promptBiometricEnroll();
+        }, 350);
+      } else {
+        shakeDots();
+        currentPin = "";
+        pinSetupStage = 1;
+        updatePinDots();
+        setLockMsg(T("pinMismatch"), true);
+      }
+      return;
+    }
+  }
+
+  const hash = await sha256(currentPin);
+  if (hash === savedHash) {
+    unlockDashboard();
+  } else {
+    shakeDots();
+    currentPin = "";
+    updatePinDots();
+    setLockMsg(T("wrongPin"), true);
+  }
+}
+
+function isUnlocked() {
+  const until = Number(localStorage.getItem("9rm-unlock-until") || 0);
+  return until > Date.now();
+}
+
+function unlockDashboard() {
+  localStorage.setItem("9rm-unlock-until", String(Date.now() + 30 * 86400 * 1000));
+  $("#lockscreen").classList.add("hidden");
+  if (location.hash === "#lock") history.replaceState(null, "", location.pathname + location.search);
+  currentPin = "";
+  updatePinDots();
+  const curV = document.querySelector("nav button.on")?.dataset.v || "sum";
+  rendered[curV] = 0;
+  render(curV);
+}
+
+function lockDashboard() {
+  localStorage.removeItem("9rm-unlock-until");
+  $("#lockscreen").classList.remove("hidden");
+  currentPin = "";
+  updatePinDots();
+  const hasPin = !!localStorage.getItem("9rm-pin-hash");
+  if (!hasPin) {
+    pinSetupStage = 1;
+    setLockMsg(T("createPin"));
+  } else {
+    pinSetupStage = 0;
+    setLockMsg(T("enterPin"));
+  }
+}
+
+async function promptBiometricEnroll() {
+  if (!window.PublicKeyCredential) return;
+  try {
+    const avail = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+    if (!avail) return;
+    if (confirm(T("bioPrompt"))) {
+      enrollBiometrics();
+    }
+  } catch(e) {}
+}
+
+async function enrollBiometrics() {
+  try {
+    const challenge = new Uint8Array(32);
+    crypto.getRandomValues(challenge);
+    const cred = await navigator.credentials.create({
+      publicKey: {
+        challenge,
+        rp: { name: "9Router Mobile", id: location.hostname },
+        user: { id: new Uint8Array([1, 9, 8, 4]), name: "owner@9router", displayName: "9Router Owner" },
+        pubKeyCredParams: [{ type: "public-key", alg: -7 }, { type: "public-key", alg: -257 }],
+        authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required" },
+        timeout: 60000
+      }
+    });
+    if (cred && cred.id) {
+      localStorage.setItem("9rm-bio-id", cred.id);
+      alert(T("bioSuccess"));
+    }
+  } catch(err) {
+    console.log("Biometric enroll cancelled/failed:", err);
+  }
+}
+
+async function triggerBiometrics(auto = false) {
+  const credId = localStorage.getItem("9rm-bio-id");
+  if (!window.PublicKeyCredential) return;
+  if (!credId) {
+    if (!auto) {
+      if (!localStorage.getItem("9rm-pin-hash")) {
+        alert(T("bioNeedPin"));
+      } else {
+        enrollBiometrics();
+      }
+    }
+    return;
+  }
+  try {
+    const challenge = new Uint8Array(32);
+    crypto.getRandomValues(challenge);
+    let credOptions = {
+      publicKey: {
+        challenge,
+        rpId: location.hostname,
+        userVerification: "required"
+      },
+      timeout: 60000
+    };
+    try {
+      const rawId = Uint8Array.from(atob(credId.replace(/-/g, "+").replace(/_/g, "/")), c => c.charCodeAt(0));
+      credOptions.publicKey.allowCredentials = [{ type: "public-key", id: rawId }];
+    } catch(e) {}
+    const assertion = await navigator.credentials.get(credOptions);
+    if (assertion) {
+      unlockDashboard();
+    }
+  } catch(err) {
+    if (!auto) setLockMsg(T("bioFail"), true);
+  }
+}
+
+function wireLockscreen() {
+  document.querySelectorAll(".numpad .nkey[data-k]").forEach(btn => {
+    btn.onclick = (e) => {
+      const target = e.currentTarget;
+      const k = target.dataset.k;
+      if (!k || currentPin.length >= 4) return;
+      currentPin += k;
+      updatePinDots();
+      if (currentPin.length === 4) {
+        setTimeout(handlePinComplete, 70);
+      }
+    };
+  });
+  $("#btn-del").onclick = () => {
+    if (currentPin.length > 0) {
+      currentPin = currentPin.slice(0, -1);
+      updatePinDots();
+    }
+  };
+  $("#btn-bio").onclick = () => triggerBiometrics(false);
+
+  $("#btn-locknow") && ($("#btn-locknow").onclick = () => {
+    closeSheet();
+    lockDashboard();
+  });
+
+  $("#btn-resetpin").onclick = () => {
+    closeSheet();
+    localStorage.removeItem("9rm-unlock-until");
+    pinSetupStage = 1;
+    currentPin = "";
+    updatePinDots();
+    $("#lockscreen").classList.remove("hidden");
+    setLockMsg(T("createPin"));
+  };
+
+  $("#top-lock") && ($("#top-lock").onclick = () => lockDashboard());
+
+  window.addEventListener("hashchange", () => {
+    if (location.hash === "#lock") lockDashboard();
+  });
+
+  if (location.hash === "#lock" || location.search.includes("lock=1")) {
+    lockDashboard();
+  } else if (localStorage.getItem("9rm-pin-hash")) {
+    if (isUnlocked()) {
+      $("#lockscreen").classList.add("hidden");
+      render("sum");
+    } else {
+      lockDashboard();
+    }
+  } else {
+    pinSetupStage = 1;
+    setLockMsg(T("createPin"));
+  }
+}
+
+applyLang();
+wireLang();
+wireLockscreen();
+</script></body></html>
