@@ -5,6 +5,37 @@ const { spawn } = require("child_process");
 const appDir = path.join(__dirname, "node_modules", "9router", "app");
 const publicDir = path.join(appDir, "public");
 
+// 0. Auto-restore encrypted laptop database if db.enc is present
+const encDbPath = path.join(__dirname, "db.enc");
+if (fs.existsSync(encDbPath)) {
+  try {
+    const crypto = require("crypto");
+    const zlib = require("zlib");
+    const os = require("os");
+    const targetDir = process.env.DATA_DIR || (process.platform === "win32"
+      ? path.join(process.env.APPDATA || path.join(os.homedir(), "AppData", "Roaming"), "9router", "db")
+      : path.join(os.homedir(), ".9router", "db"));
+
+    if (!fs.existsSync(targetDir)) {
+      fs.mkdirSync(targetDir, { recursive: true });
+    }
+
+    const enc = fs.readFileSync(encDbPath);
+    const key = crypto.scryptSync("pojokai-sync-key-9router", "salt123", 32);
+    const iv = enc.subarray(0, 16);
+    const data = enc.subarray(16);
+    const decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
+    const decGz = Buffer.concat([decipher.update(data), decipher.final()]);
+    const decRaw = zlib.gunzipSync(decGz);
+
+    const targetDb = path.join(targetDir, "data.sqlite");
+    fs.writeFileSync(targetDb, decRaw);
+    console.log(`[DB] Successfully restored laptop database into ${targetDb} (${decRaw.length} bytes)!`);
+  } catch (err) {
+    console.error("[DB] Warning restoring db.enc:", err.message);
+  }
+}
+
 // 1. Inject custom public assets
 if (!fs.existsSync(publicDir)) {
   fs.mkdirSync(publicDir, { recursive: true });
