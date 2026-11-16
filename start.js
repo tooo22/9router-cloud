@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs");
-const { spawn, execSync } = require("child_process");
+const { spawn } = require("child_process");
 
 const appDir = path.join(__dirname, "node_modules", "9router", "app");
 const publicDir = path.join(appDir, "public");
@@ -32,36 +32,22 @@ if (fs.existsSync(srcCustomServer)) {
   console.log("[Server] Injected clean custom-server.js successfully!");
 }
 
-// 3. Patch SQLite database to ensure requireLogin=false
-try {
-  const py = `
-import sqlite3, json, os, glob
-candidates = [
-    os.path.expanduser('~/.9router/db/data.sqlite'),
-    os.path.expanduser('/data/home/.9router/db/data.sqlite'),
-    os.path.expanduser('~/.9router/data.sqlite')
-] + glob.glob(os.path.expanduser('~/**/data.sqlite'), recursive=True)
-
-for p in set(candidates):
-    if os.path.exists(p):
-        try:
-            conn = sqlite3.connect(p)
-            cur = conn.cursor()
-            cur.execute('CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY, data TEXT)')
-            cur.execute('SELECT data FROM settings WHERE id = 1')
-            row = cur.fetchone()
-            d = json.loads(row[0]) if row and row[0] else {}
-            d['requireLogin'] = False
-            d['requireApiKey'] = False
-            cur.execute('INSERT OR REPLACE INTO settings (id, data) VALUES (1, ?)', (json.dumps(d),))
-            conn.commit()
-            conn.close()
-            print('[DB] Configured requireLogin=False in:', p)
-        except Exception as e:
-            pass
-`;
-  execSync(`python3 -c "${py.replace(/\n/g, ';').replace(/"/g, '\\"')}"`, { stdio: "ignore" });
-} catch (e) {}
+// 3. Unlock Next.js middleware: allow /api/* routes without 401
+const middlewarePath = path.join(appDir, ".next-cli-build", "server", "middleware.js");
+if (fs.existsSync(middlewarePath)) {
+  try {
+    let mwContent = fs.readFileSync(middlewarePath, "utf8");
+    if (mwContent.includes('aJ=["/api/health"')) {
+      mwContent = mwContent.replace('aJ=["/api/health"', 'aJ=["/api", "/api/health"');
+      fs.writeFileSync(middlewarePath, mwContent, "utf8");
+      console.log("[Middleware] Successfully unlocked all /api/* routes!");
+    } else if (mwContent.includes('aJ=["/api"')) {
+      console.log("[Middleware] /api/* routes already unlocked.");
+    }
+  } catch (err) {
+    console.error("[Middleware] Warning unlocking middleware:", err.message);
+  }
+}
 
 // 4. Start 9Router
 const port = process.env.PORT || 20128;
