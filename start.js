@@ -24,14 +24,49 @@ for (const file of assets) {
   }
 }
 
-// 2. Auto-patch custom-server.js to serve /mobile and route hostnames
+// 2. Auto-patch custom-server.js to serve /mobile, route hostnames, and auto-authorize API
 const customServerPath = path.join(appDir, "custom-server.js");
 if (fs.existsSync(customServerPath)) {
   try {
     let content = fs.readFileSync(customServerPath, "utf8");
+
+    // Add getCliToken helper if missing
+    if (!content.includes("function getCliToken()")) {
+      const helper = `
+let _cachedCliTok = null;
+function getCliToken() {
+  if (_cachedCliTok) return _cachedCliTok;
+  try {
+    const os = require("os");
+    const crypto = require("crypto");
+    const dDir = process.env.DATA_DIR || (process.platform === "win32"
+      ? path.join(process.env.APPDATA || path.join(os.homedir(), "AppData", "Roaming"), "9router")
+      : path.join(os.homedir(), ".9router"));
+    const raw = fs.readFileSync(path.join(dDir, "machine-id"), "utf8").trim();
+    const sec = fs.readFileSync(path.join(dDir, "auth", "cli-secret"), "utf8").trim();
+    _cachedCliTok = crypto.createHash("sha256").update(raw + "9r-cli-auth" + sec).digest("hex").substring(0, 16);
+    return _cachedCliTok;
+  } catch (e) {
+    return "";
+  }
+}
+`;
+      content = helper + content;
+    }
+
+    // Ensure x-9r-cli-token is injected into incoming requests
+    if (!content.includes('req.headers["x-9r-cli-token"]')) {
+      content = content.replace(
+        'if (viaProxy) req.headers["x-9r-via-proxy"] = "1";',
+        'if (viaProxy) req.headers["x-9r-via-proxy"] = "1";\n    try { const t = getCliToken(); if (t) req.headers["x-9r-cli-token"] = t; } catch {}'
+      );
+    }
+
+    // Ensure /mobile routing is present
     if (!content.includes("isMobileHost")) {
       const target = 'if (viaProxy) req.headers["x-9r-via-proxy"] = "1";';
       const patch = `if (viaProxy) req.headers["x-9r-via-proxy"] = "1";
+    try { const t = getCliToken(); if (t) req.headers["x-9r-cli-token"] = t; } catch {}
     const u = (req.url || "").split("?")[0];
     const host = (req.headers["host"] || "").toLowerCase();
     const isMobileHost = host.includes("9router") || host.includes("mobile.");
@@ -51,12 +86,11 @@ if (fs.existsSync(customServerPath)) {
         res.end(d);
       });
     }`;
-      if (content.includes(target)) {
-        content = content.replace(target, patch);
-        fs.writeFileSync(customServerPath, content, "utf8");
-        console.log("[Patch] Successfully injected /mobile and host routing into custom-server.js!");
-      }
+      content = content.replace(target, patch);
     }
+
+    fs.writeFileSync(customServerPath, content, "utf8");
+    console.log("[Patch] custom-server.js successfully verified and patched!");
   } catch (err) {
     console.error("[Patch] Warning patching custom-server.js:", err.message);
   }
